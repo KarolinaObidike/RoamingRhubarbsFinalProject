@@ -1,4 +1,4 @@
-pandas==2.3.2
+pandas==3.0.3
 psycopg[binary]
 python-dotenv==1.1.1
 pytest==8.4.1
