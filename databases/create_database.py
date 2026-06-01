@@ -1,108 +1,111 @@
+from . import connectdb
 
-conn = psycopg2.connect( 
-    host="localhost", 
-    database="cafe_sales", 
-    user="postgres", 
-    password="your_password", 
-    port="5432" 
-    ) 
+conn=connectdb.get_connection()
+# conn = psycopg2.connect( 
+#     host="localhost", 
+#     database="cafe_sales", 
+#     user="postgres", 
+#     password="your_password", 
+#     port="5432" 
+#     ) 
 
-cursor = conn.cursor()
+def setup_db():
+    cursor = conn.cursor()
 
-# ============================================
-# CREATE TABLES
-# ============================================
+    # ============================================
+    # CREATE TABLES
+    # ============================================
 
-create_tables_sql = """
+    create_tables_sql = """
 
--- ============================================
--- BRANCHES
--- ============================================
+    -- ============================================
+    -- BRANCHES
+    -- ============================================
 
-CREATE TABLE IF NOT EXISTS branches (
-    branch_id UUID PRIMARY KEY,
-    branch_name VARCHAR(255) NOT NULL
-);
+    CREATE TABLE IF NOT EXISTS branches (
+        branch_id UUID PRIMARY KEY,
+        branch_name VARCHAR(255) NOT NULL
+    );
 
--- ============================================
--- PAYMENT TYPES
--- ============================================
+    -- ============================================
+    -- PAYMENT TYPES
+    -- ============================================
 
-CREATE TABLE IF NOT EXISTS payment_type (
-    payment_method_id UUID PRIMARY KEY,
-    payment_method VARCHAR(100) NOT NULL
-);
+    CREATE TABLE IF NOT EXISTS payment_type (
+        payment_method_id UUID PRIMARY KEY,
+        payment_method VARCHAR(100) NOT NULL
+    );
 
--- ============================================
--- PRODUCTS
--- ============================================
+    -- ============================================
+    -- PRODUCTS
+    -- ============================================
 
-CREATE TABLE IF NOT EXISTS products (
-    product_id UUID PRIMARY KEY,
-    product_name VARCHAR(255) NOT NULL,
-    current_price DECIMAL(10,2) NOT NULL
-);
+    CREATE TABLE IF NOT EXISTS products (
+        product_id UUID PRIMARY KEY,
+        product_name VARCHAR(255) NOT NULL,
+        current_price DECIMAL(10,2) NOT NULL
+    );
 
--- ============================================
--- TRANSACTIONS
--- ============================================
+    -- ============================================
+    -- TRANSACTIONS
+    -- ============================================
 
-CREATE TABLE IF NOT EXISTS transactions (
-    transaction_id UUID PRIMARY KEY,
+    CREATE TABLE IF NOT EXISTS transactions (
+        transaction_id UUID PRIMARY KEY,
 
-    branch_id UUID NOT NULL,
-    payment_method_id UUID NOT NULL,
+        branch_id UUID NOT NULL,
+        payment_method_id UUID NOT NULL,
 
-    transaction_timestamp TIMESTAMP NOT NULL,
-    transaction_total DECIMAL(10,2) NOT NULL,
+        transaction_timestamp TIMESTAMP NOT NULL,
+        transaction_total DECIMAL(10,2) NOT NULL,
 
-    CONSTRAINT fk_transactions_branch
-        FOREIGN KEY (branch_id)
-        REFERENCES branches(branch_id),
+        CONSTRAINT fk_transactions_branch
+            FOREIGN KEY (branch_id)
+            REFERENCES branches(branch_id),
 
-    CONSTRAINT fk_transactions_payment
-        FOREIGN KEY (payment_method_id)
-        REFERENCES payment_type(payment_method_id)
-);
+        CONSTRAINT fk_transactions_payment
+            FOREIGN KEY (payment_method_id)
+            REFERENCES payment_type(payment_method_id)
+    );
 
--- ============================================
--- TRANSACTION ITEMS
--- ============================================
+    -- ============================================
+    -- TRANSACTION ITEMS
+    -- ============================================
 
-CREATE TABLE IF NOT EXISTS transaction_items (
-    transaction_item_id UUID PRIMARY KEY,
+    CREATE TABLE IF NOT EXISTS transaction_items (
+        transaction_item_id UUID PRIMARY KEY,
 
-    transaction_id UUID NOT NULL,
-    product_id UUID NOT NULL,
+        transaction_id UUID NOT NULL,
+        product_id UUID NOT NULL,
 
-    quantity INTEGER NOT NULL,
-    unit_price DECIMAL(10,2) NOT NULL,
+        quantity INTEGER NOT NULL,
+        unit_price DECIMAL(10,2) NOT NULL,
 
-    CONSTRAINT fk_transaction_items_transaction
-        FOREIGN KEY (transaction_id)
-        REFERENCES transactions(transaction_id),
+        CONSTRAINT fk_transaction_items_transaction
+            FOREIGN KEY (transaction_id)
+            REFERENCES transactions(transaction_id),
 
-    CONSTRAINT fk_transaction_items_product
-        FOREIGN KEY (product_id)
-        REFERENCES products(product_id)
-);
+        CONSTRAINT fk_transaction_items_product
+            FOREIGN KEY (product_id)
+            REFERENCES products(product_id)
+    );
 
-"""
+    """
 
-# ============================================
-# EXECUTE SQL
-# ============================================
+    # ============================================
+    # EXECUTE SQL
+    # ============================================
 
-cursor.execute(create_tables_sql)
+    cursor.execute(create_tables_sql)
 
-# Commit changes
-conn.commit()
+    # Commit changes
+    conn.commit()
 
-print("Database schema created successfully.")
+    print("Database schema created successfully.")
 
-# ============================================
-# CLOSE CONNECTION
-# ============================================
+    # ============================================
+    # CLOSE CONNECTION
+    # ============================================
 
-cursor.close()
-conn.close()
+    cursor.close()
+    conn.close()
