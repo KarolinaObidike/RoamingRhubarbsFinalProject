@@ -1,0 +1,21 @@
+# Environment variables
+.env
+
+# Optional variations
+.env.local
+.env.development
+.env.production
+
+# Python virtual environments
+venv/
+.env/
+
+# Python cache files
+__pycache__/
+*.pyc
+
+# IDE files
+.vscode/
+.idea/
+
+leeds_28-03-2025_09-00-00.csv
