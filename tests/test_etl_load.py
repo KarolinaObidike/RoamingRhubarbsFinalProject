@@ -1,7 +1,7 @@
 """
-Unit tests for databases/load.py
+Unit tests for ETL/load.py
 
-Run with:  pytest tests/test_load.py -v
+Run with:  pytest tests/test_etl_load.py -v
 
 These tests use unittest.mock so no real database is needed.
 Each loader function is tested with:
@@ -16,7 +16,7 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 
-from databases.load import (
+from ETL.load import (
     load_all,
     load_branches,
     load_payment_types,
@@ -39,7 +39,6 @@ def mock_cursor():
 @pytest.fixture
 def mock_conn(mock_cursor):
     conn = MagicMock()
-    # Make `with conn.cursor() as cursor` return our mock_cursor
     conn.cursor.return_value.__enter__ = MagicMock(return_value=mock_cursor)
     conn.cursor.return_value.__exit__ = MagicMock(return_value=False)
     return conn
@@ -63,8 +62,7 @@ class TestLoadBranches:
         count = load_branches(branches, mock_cursor)
 
         assert count == 2
-        mock_cursor.execute.called or True  # execute_values calls cursor internally
-        # execute_values is patched at the psycopg2 level; verify via row count
+        assert mock_cursor.execute.called
         assert count == len(branches)
 
     def test_empty_list_returns_zero(self, mock_cursor):
@@ -147,10 +145,9 @@ class TestLoadTransactions:
         assert load_transactions([], mock_cursor) == 0
 
     def test_batching_splits_correctly(self, mock_cursor):
-        """15 rows with batch_size=5 should produce exactly 3 execute_values calls."""
         txns = [self._make_transaction() for _ in range(15)]
 
-        with patch("databases.load.execute_values") as mock_ev:
+        with patch("ETL.load.extras.execute_values") as mock_ev:
             count = load_transactions(txns, mock_cursor, batch_size=5)
 
         assert count == 15
@@ -182,10 +179,9 @@ class TestLoadTransactionItems:
         assert load_transaction_items([], mock_cursor) == 0
 
     def test_batching_splits_correctly(self, mock_cursor):
-        """22 rows with batch_size=10 should produce 3 batches (10, 10, 2)."""
         items = [self._make_item() for _ in range(22)]
 
-        with patch("databases.load.execute_values") as mock_ev:
+        with patch("ETL.load.extras.execute_values") as mock_ev:
             count = load_transaction_items(items, mock_cursor, batch_size=10)
 
         assert count == 22
@@ -237,7 +233,7 @@ class TestLoadAll:
     def test_commits_on_success(self, mock_conn):
         data = self._make_transformed_data()
 
-        with patch("databases.load.execute_values"):
+        with patch("ETL.load.extras.execute_values"):
             counts = load_all(data, mock_conn)
 
         mock_conn.commit.assert_called_once()
@@ -252,7 +248,7 @@ class TestLoadAll:
     def test_rolls_back_on_failure(self, mock_conn):
         data = self._make_transformed_data()
 
-        with patch("databases.load.execute_values", side_effect=Exception("DB error")):
+        with patch("ETL.load.extras.execute_values", side_effect=Exception("DB error")):
             with pytest.raises(Exception, match="DB error"):
                 load_all(data, mock_conn)
 
@@ -260,8 +256,7 @@ class TestLoadAll:
         mock_conn.commit.assert_not_called()
 
     def test_handles_missing_keys_gracefully(self, mock_conn):
-        """load_all should not crash if some keys are absent from transformed_data."""
-        with patch("databases.load.execute_values"):
+        with patch("ETL.load.extras.execute_values"):
             counts = load_all({}, mock_conn)
 
         assert counts["branches"] == 0
