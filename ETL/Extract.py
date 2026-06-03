@@ -1,4 +1,6 @@
 import csv
+from pathlib import Path
+from typing import Optional
 
 
 def extract_data(file_path):
@@ -25,10 +27,34 @@ def extract_data(file_path):
     return data
 
 
-def get_data(data=None):
-    if data is None:
-        data = extract_data("leeds_28-03-2025.csv")
-    return data
+def get_data(data=None, file_path: Optional[str] = None, search_dir: Optional[str] = None):
+    """
+    Return extracted data.
+
+    - If `data` is provided, return it unchanged.
+    - If `file_path` is provided, load from that CSV (error if missing).
+    - Otherwise search `search_dir` (or current working dir) for the most
+      recently modified `*.csv` file and load it.
+    """
+    if data is not None:
+        return data
+
+    # If explicit file path provided use it
+    if file_path:
+        csv_path = Path(file_path)
+        if not csv_path.exists():
+            raise FileNotFoundError(f"CSV file not found: {file_path}")
+    else:
+        # search for CSV files in provided directory or current working dir
+        search_path = Path(search_dir) if search_dir else Path.cwd()
+        candidates = sorted(
+            search_path.glob("*.csv"), key=lambda p: p.stat().st_mtime, reverse=True
+        )
+        if not candidates:
+            raise FileNotFoundError(f"No CSV files found in {search_path}")
+        csv_path = candidates[0]
+
+    return extract_data(str(csv_path))
 
 
 def print_data_table(data):
