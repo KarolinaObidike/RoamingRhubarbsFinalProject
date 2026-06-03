@@ -1,5 +1,5 @@
 # THIS CODE WILL RUN THE FULL ETL PIPELINE
-from databases import create_database, connectdb
+from databases import connectdb
 from ETL import Extract, Transform
 from ETL.load import load_all
 
