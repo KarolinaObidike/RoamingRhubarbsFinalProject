@@ -13,7 +13,7 @@ services:
 
     volumes:
       - postgres_data:/var/lib/postgresql/data
-      - ./create_database.sql:/docker-entrypoint-initdb.d/create_database.sql
+      - ./001_create_tables.sql:/docker-entrypoint-initdb.d/001_create_tables.sql
 
   adminer:
     image: adminer
