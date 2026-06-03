@@ -151,7 +151,7 @@ def normalise_data(cleaned_rows):
 
     return {
         "branches": branches,
-        "payment_type": payment_types,
+        "payment_types": payment_types,
         "products": products,
         "transactions": transactions,
         "transaction_items": transaction_items,
@@ -164,7 +164,7 @@ def transform(rawdata):
 
     print("Transform completed successfully.")
     print(f"Branches created: {len(transformed_data['branches'])}")
-    print(f"Payment types created: {len(transformed_data['payment_type'])}")
+    print(f"Payment types created: {len(transformed_data['payment_types'])}")
     print(f"Products created: {len(transformed_data['products'])}")
     print(f"Transactions created: {len(transformed_data['transactions'])}")
     print(f"Transaction items created: {len(transformed_data['transaction_items'])}")
