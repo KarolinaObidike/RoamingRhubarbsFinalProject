@@ -23,10 +23,10 @@ Example: CSV Data Extraction (Task)
 
 ## RFP-11 Transform - Normalise data to match schema
 02/06/2026
-* Sensitive fields are removed before normalisation.
-* `items ordered` is split into separate item records.
-* Product names and prices are separated.
-* UUIDs are generated in Python.
-* Data is shaped for the database tables: branches, payment_type, products, transactions, and transaction_items.
-* Foreign key relationships are preserved in the transformed data.
-* Transform output is tested/reviewed before moving ticket to Done.
+- Sensitive fields are removed before normalisation.
+- `items ordered` is split into separate item records.
+- Product names and prices are separated.
+- UUIDs are generated in Python.
+- Data is shaped for the database tables: branches, payment_type, products, transactions, and transaction_items.
+- Foreign key relationships are preserved in the transformed data.
+- Transform output is tested/reviewed before moving ticket to Done.
