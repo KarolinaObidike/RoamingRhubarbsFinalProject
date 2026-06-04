@@ -10,6 +10,7 @@ host_name = os.environ.get("POSTGRES_HOST")
 database_name = os.environ.get("POSTGRES_DB")
 user_name = os.environ.get("POSTGRES_USER")
 user_password = os.environ.get("POSTGRES_PASSWORD")
+port = int(os.getenv("POSTGRES_PORT", 5432))
 
 
 
@@ -21,7 +22,8 @@ def get_connection():
         host=host_name,
         dbname=database_name,
         user=user_name,
-        password=user_password
+        password=user_password,
+        port = port
     )
 
     return connection
