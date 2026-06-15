@@ -1,0 +1,63 @@
+AWSTemplateFormatVersion: "2010-09-09"
+
+Description: ETL Lambda stack
+
+Parameters:
+
+  DeploymentBucketName:
+    Type: String
+
+
+Resources:
+
+  CsvBucket:
+    Type: AWS::S3::Bucket
+
+
+  ETLLambdaRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: roamingrhubarbs-etl-lambda-role
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - lambda.amazonaws.com
+            Action:
+              - sts:AssumeRole
+
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+
+
+  ETLLambda:
+    Type: AWS::Lambda::Function
+    Properties:
+      FunctionName: roamingrhubarbs-etl-lambda
+      Runtime: python3.12
+      Handler: lambda_function.lambda_handler
+
+      Role: !GetAtt ETLLambdaRole.Arn
+
+      Code:
+        S3Bucket: !Ref DeploymentBucketName
+        S3Key: lambda.zip
+
+
+  LambdaInvokePermission:
+    Type: AWS::Lambda::Permission
+    Properties:
+      FunctionName: !Ref ETLLambda
+      Action: lambda:InvokeFunction
+      Principal: s3.amazonaws.com
+      SourceArn: !GetAtt CsvBucket.Arn
+
+
+
+
+Outputs:
+
+  LambdaName:
+    Value: !Ref ETLLambda
