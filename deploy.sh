@@ -19,8 +19,7 @@ aws cloudformation deploy --stack-name ${team_name}-deployment-stack \
     --template-file deployment-stack.yml --region $region \
     --capabilities CAPABILITY_IAM \
     --profile ${aws_profile} \
-    --parameter-overrides \
-      YourName="${team_name}";
+    --parameter-overrides;
 
 DEPLOYMENT_BUCKET=$(aws cloudformation describe-stacks \
     --stack-name ${team_name}-deployment-stack \
@@ -56,7 +55,6 @@ aws cloudformation deploy --stack-name ${team_name}-ETL-stack \
     --capabilities CAPABILITY_IAM \
     --profile ${aws_profile} \
     --parameter-overrides \
-      YourName="${team_name}" \
       DeploymentBucketName="${DEPLOYMENT_BUCKET}";
 
 echo ""
