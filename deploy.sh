@@ -18,8 +18,7 @@ echo ""
 aws cloudformation deploy --stack-name ${team_name}-deployment-stack \
     --template-file deployment-stack.yml --region $region \
     --capabilities CAPABILITY_IAM \
-    --profile ${aws_profile} \
-    --parameter-overrides;
+    --profile ${aws_profile};
 
 DEPLOYMENT_BUCKET=$(aws cloudformation describe-stacks \
     --stack-name ${team_name}-deployment-stack \
