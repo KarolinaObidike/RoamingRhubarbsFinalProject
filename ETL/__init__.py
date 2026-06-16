@@ -1,4 +1,4 @@
-from .Extract import extract_data, get_data, print_data_table
+from .Extract import extract_data, extract_data_from_string, get_data, print_data_table
 from .transform import transform
 from .load import (
     load_all,
