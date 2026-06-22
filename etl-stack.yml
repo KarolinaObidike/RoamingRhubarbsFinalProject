@@ -68,6 +68,10 @@ Resources:
         S3Bucket: !Ref DeploymentBucketName
         S3Key: lambda.zip
 
+    Environment:
+      Variables:
+        AWS_REGION: eu-west-1
+
 
   LambdaInvokePermission:
     Type: AWS::Lambda::Permission
