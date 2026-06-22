@@ -6,6 +6,12 @@ Resources:
 
   DeploymentBucket:
     Type: AWS::S3::Bucket
+    Properties:
+      PublicAccessBlockConfiguration: # do not allow any public access
+        BlockPublicAcls: True
+        BlockPublicPolicy: True
+        IgnorePublicAcls: True
+        RestrictPublicBuckets: True
 
 
 Outputs:

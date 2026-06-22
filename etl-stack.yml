@@ -12,7 +12,30 @@ Resources:
 
   CsvBucket:
     Type: AWS::S3::Bucket
+    Properties:
+      PublicAccessBlockConfiguration: 
+        BlockPublicAcls: True
+        BlockPublicPolicy: True
+        IgnorePublicAcls: True
+        RestrictPublicBuckets: True
 
+
+  CsvBucketPolicy:
+    Type: AWS::S3::BucketPolicy
+    Properties:
+      Bucket: !Ref CsvBucket
+      PolicyDocument:
+        Statement:
+          - Sid: "AllowSSLRequestsOnly"
+            Action: "s3:*"
+            Principal: "*"
+            Effect: "Deny" # Block if...
+            Resource:
+              - !Sub "${CsvBucket.Arn}"
+              - !Sub "${CsvBucket.Arn}/*"
+            Condition:
+              Bool:
+                aws:SecureTransport: "false" 
 
   ETLLambdaRole:
     Type: AWS::IAM::Role
