@@ -32,9 +32,17 @@ echo "...all done!"
 echo ""
 
 echo "Packaging Lambda Function"
-cd lambda
-zip lambda.zip lambda_function.py
+rm -rf lambda_build
+mkdir lambda_build
+pip install --target lambda_build psycopg2-binary python-dotenv boto3
+cp lambda/lambda_function.py lambda_build/
+cp -r ETL lambda_build/
+cp -r databases lambda_build/
+cd lambda_build
+zip -r ../lambda/lambda.zip .
 cd ..
+rm -rf lambda_build 
+
 echo "Packaged Lambda Function"
 
 echo "Uploading Lambda"
@@ -55,7 +63,11 @@ aws cloudformation deploy --stack-name ${team_name}-ETL-stack \
     --capabilities CAPABILITY_NAMED_IAM \
     --profile ${aws_profile} \
     --parameter-overrides \
-      DeploymentBucketName="${DEPLOYMENT_BUCKET}";
+      DeploymentBucketName="${DEPLOYMENT_BUCKET}" \ 
+      RedshiftSsmParameterName="roaming_rhubarb_redshift_settings" \
+      LambdaSubnetIds="subnet-0b18baebb2612c8b0" \
+      LambdaSecurityGroupIds="sg-0e23d4530f0fbf635";
+    
 
 
 echo ""

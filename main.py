@@ -19,7 +19,7 @@ def wait_for_db():
 
 def main():
     rawdata = Extract.get_data()
-    transformed_data = Transform.transform(rawdata)
+    transformed_data = Transform.etl_transform(rawdata)
 
     with connectdb.get_connection() as conn:
         load_counts = load_all(transformed_data, conn)

@@ -158,7 +158,7 @@ def normalise_data(cleaned_rows):
     }
 #This converts previously cleaned CSV rows into records that match the database schema
 
-def transform(rawdata):
+def etl_transform(rawdata):
     cleaned_data = remove_sensitive_data(rawdata)
     transformed_data = normalise_data(cleaned_data)
 

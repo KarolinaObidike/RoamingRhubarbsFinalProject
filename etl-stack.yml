@@ -7,6 +7,14 @@ Parameters:
   DeploymentBucketName:
     Type: String
 
+  RedshiftSsmParameterName:
+    Type: String
+    
+  LambdaSubnetIds:
+      Type: List<AWS::EC2::Subnet::Id>
+  
+  LambdaSecurityGroupIds:
+      Type: List<AWS::EC2::SecurityGroup::Id>
 
 Resources:
 
@@ -47,7 +55,12 @@ Resources:
       Code:
         S3Bucket: !Ref DeploymentBucketName
         S3Key: lambda.zip
-
+      Environment:
+        Variables:
+            REDSHIFT_SSM_PARAMETER_NAME: !Ref RedshiftSsmParameterName
+      VpcConfig:
+         SubnetIds: !Ref LambdaSubnetIds
+         SecurityGroupIds: !Ref LambdaSecurityGroupIds
 
   LambdaInvokePermission:
     Type: AWS::Lambda::Permission
