@@ -1,13 +1,13 @@
 from datetime import datetime
 from decimal import Decimal
 
-from ETL.transform import (
+from ETL.Transform import (
     format_money,
     format_timestamp,
     normalise_data,
     parse_items_ordered,
     remove_sensitive_data,
-    transform,
+    etl_transform,
 )
 
 
@@ -108,7 +108,7 @@ def test_normalise_data_shapes_rows_for_schema_and_preserves_foreign_keys():
 
 
 def test_transform_does_not_return_sensitive_customer_fields():
-    transformed = transform(raw_rows())
+    transformed = etl_transform(raw_rows())
     all_output_rows = [
         row
         for table_rows in transformed.values()
