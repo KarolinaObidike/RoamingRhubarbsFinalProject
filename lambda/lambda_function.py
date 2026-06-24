@@ -1,12 +1,14 @@
 import logging
 import os
+import sys
+sys.path.append(os.path.join(os.path.dirname(__file__), ".."))
 import urllib.parse
 import boto3
+
 from ETL.Transform import etl_transform
 from ETL.Extract import extract_data_from_string
 from databases import connectdb
 from ETL.load import load_all
-
 
 # Initialize logging and S3 client outside the handler for warm start benefits
 logger = logging.getLogger()
