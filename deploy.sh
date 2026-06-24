@@ -69,6 +69,19 @@ aws cloudformation deploy --stack-name ${team_name}-ETL-stack \
       LambdaSecurityGroupIds="sg-0e23d4530f0fbf635";
     
 
+echo ""
+echo "Forcing Lambda to pick up latest code..."
+echo ""
+
+aws lambda update-function-code \
+    --function-name roamingrhubarbs-etl-lambda \
+    --s3-bucket "${DEPLOYMENT_BUCKET}" \
+    --s3-key lambda.zip \
+    --region ${region} \
+    --profile ${aws_profile} \
+    --publish;
+echo "Lambda code updated"
+
 
 echo ""
 echo "...all done!"
