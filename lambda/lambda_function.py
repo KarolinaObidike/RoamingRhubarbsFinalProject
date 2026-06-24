@@ -5,7 +5,7 @@ sys.path.append(os.path.join(os.path.dirname(__file__), ".."))
 import urllib.parse
 import boto3
 
-from ETL.Transform import etl_transform
+from ETL.transform import etl_transform
 from ETL.Extract import extract_data_from_string
 from databases import connectdb
 from ETL.load import load_all

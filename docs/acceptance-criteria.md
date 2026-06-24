@@ -30,3 +30,6 @@ Example: CSV Data Extraction (Task)
 - Data is shaped for the database tables: branches, payment_type, products, transactions, and transaction_items.
 - Foreign key relationships are preserved in the transformed data.
 - Transform output is tested/reviewed before moving ticket to Done.
+
+
+
