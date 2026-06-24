@@ -9,10 +9,10 @@ Parameters:
 
   RedshiftSsmParameterName:
     Type: String
-    
+
   LambdaSubnetIds:
       Type: List<AWS::EC2::Subnet::Id>
-  
+
   LambdaSecurityGroupIds:
       Type: List<AWS::EC2::SecurityGroup::Id>
 
@@ -31,7 +31,7 @@ Resources:
         RestrictPublicBuckets: True
       NotificationConfiguration:
         LambdaConfigurations:
-          - Event: s3:ObjectCreated:*
+          - Event: "s3:ObjectCreated:*"
             Function: !GetAtt ETLLambda.Arn
 
   CsvBucketPolicy:
@@ -75,7 +75,7 @@ Resources:
       FunctionName: !Ref ETLLambda
       Action: lambda:InvokeFunction
       Principal: s3.amazonaws.com
-      SourceArn: !GetAtt CsvBucket.Arn
+      SourceAccount: !Ref AWS::AccountId
 
 
 Outputs:
@@ -84,4 +84,4 @@ Outputs:
     Value: !Ref ETLLambda
 
 
-    # 
+  

@@ -2,7 +2,7 @@ import logging
 import os
 import urllib.parse
 import boto3
-from ETL.Transform import Transform
+from ETL.Transform import etl_transform
 from ETL.Extract import extract_data_from_string
 from databases import connectdb
 from ETL.load import load_all
@@ -34,8 +34,7 @@ def lambda_handler(event, context):
         logger.info(f"Extracted {len(raw_data)} data rows from {object_key}")
 
         # 4. Transform data using your shared pipeline module
-        transform = Transform()
-        transformed_data = Transform.transform(raw_data)
+        transformed_data = etl_transform(raw_data)
 
         logger.info(
             f"Transform successful — "
