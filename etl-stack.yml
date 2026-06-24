@@ -19,13 +19,20 @@ Parameters:
 Resources:
 
   CsvBucket:
+
     Type: AWS::S3::Bucket
+    DependsOn: LambdaInvokePermission
+
     Properties:
       PublicAccessBlockConfiguration:
         BlockPublicAcls: True
         BlockPublicPolicy: True
         IgnorePublicAcls: True
         RestrictPublicBuckets: True
+      NotificationConfiguration:
+        LambdaConfigurations:
+          - Event: s3:ObjectCreated:*
+            Function: !GetAtt ETLLambda.Arn
 
   CsvBucketPolicy:
     Type: AWS::S3::BucketPolicy
@@ -69,8 +76,6 @@ Resources:
       Action: lambda:InvokeFunction
       Principal: s3.amazonaws.com
       SourceArn: !GetAtt CsvBucket.Arn
-
-
 
 
 Outputs:
