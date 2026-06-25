@@ -3,7 +3,7 @@
 -- ============================================
 
 CREATE TABLE IF NOT EXISTS branches (
-    branch_id UUID PRIMARY KEY,
+    branch_id VARCHAR(36) PRIMARY KEY,
     branch_name VARCHAR(255) NOT NULL
 );
 
@@ -12,7 +12,7 @@ CREATE TABLE IF NOT EXISTS branches (
 -- ============================================
 
 CREATE TABLE IF NOT EXISTS payment_type (
-    payment_method_id UUID PRIMARY KEY,
+    payment_method_id VARCHAR(36) PRIMARY KEY,
     payment_method VARCHAR(100) NOT NULL
 );
 
@@ -21,7 +21,7 @@ CREATE TABLE IF NOT EXISTS payment_type (
 -- ============================================
 
 CREATE TABLE IF NOT EXISTS products (
-    product_id UUID PRIMARY KEY,
+    product_id VARCHAR(36) PRIMARY KEY,
     product_name VARCHAR(255) NOT NULL,
     current_price DECIMAL(10,2) NOT NULL
 );
@@ -31,10 +31,10 @@ CREATE TABLE IF NOT EXISTS products (
 -- ============================================
 
 CREATE TABLE IF NOT EXISTS transactions (
-    transaction_id UUID PRIMARY KEY,
+    transaction_id VARCHAR(36) PRIMARY KEY,
 
-    branch_id UUID NOT NULL,
-    payment_method_id UUID NOT NULL,
+    branch_id VARCHAR(36) NOT NULL,
+    payment_method_id VARCHAR(36) NOT NULL,
 
     transaction_timestamp TIMESTAMP NOT NULL,
     transaction_total DECIMAL(10,2) NOT NULL,
@@ -53,10 +53,10 @@ CREATE TABLE IF NOT EXISTS transactions (
 -- ============================================
 
 CREATE TABLE IF NOT EXISTS transaction_items (
-    transaction_item_id UUID PRIMARY KEY,
+    transaction_item_id VARCHAR(36) PRIMARY KEY,
 
-    transaction_id UUID NOT NULL,
-    product_id UUID NOT NULL,
+    transaction_id VARCHAR(36) NOT NULL,
+    product_id VARCHAR(36) NOT NULL,
 
     quantity INTEGER NOT NULL,
     unit_price DECIMAL(10,2) NOT NULL,
