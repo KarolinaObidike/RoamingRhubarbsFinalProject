@@ -44,7 +44,9 @@ def lambda_handler(event, context):
             f"Transactions: {len(transformed_data['transactions'])}"
         )
 
-        ssm_parameter_name = os.environ.get["REDSHIFT_SSM_PARAMETER_NAME"]
+        ssm_parameter_name = os.environ.get("REDSHIFT_SSM_PARAMETER_NAME")
+        if not ssm_parameter_name:
+            raise ValueError("Missing environment variable: REDSHIFT_SSM_PARAMETER_NAME")
         with connectdb.get_redshift_connection(ssm_parameter_name) as conn:
             load_counts = load_all(transformed_data, conn)
 
