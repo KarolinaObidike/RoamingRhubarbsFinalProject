@@ -34,7 +34,13 @@ echo ""
 echo "Packaging Lambda Function"
 rm -rf lambda_build
 mkdir lambda_build
-pip install --target lambda_build psycopg2-binary python-dotenv boto3
+python3 -m pip install \
+  --platform manylinux2014_x86_64 \
+  --implementation cp \
+  --python-version 3.14 \
+  --only-binary=:all: \
+  --target lambda_build \
+  psycopg2-binary python-dotenv boto3
 cp lambda/lambda_function.py lambda_build/
 cp -r ETL lambda_build/
 cp -r databases lambda_build/
