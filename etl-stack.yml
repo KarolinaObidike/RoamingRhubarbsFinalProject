@@ -56,7 +56,7 @@ Resources:
     Type: AWS::Lambda::Function
     Properties:
       FunctionName: roamingrhubarbs-etl-lambda
-      Runtime: python3.12
+      Runtime: python3.14
       Handler: lambda_function.lambda_handler
       Role: !Sub 'arn:aws:iam::660759886369:role/lambda-execution-role'
       Code:
