@@ -34,7 +34,13 @@ echo ""
 echo "Packaging Lambda Function"
 rm -rf lambda_build
 mkdir lambda_build
-pip install --target lambda_build psycopg2-binary python-dotenv boto3
+python3 -m pip install \
+  --platform manylinux2014_x86_64 \
+  --implementation cp \
+  --python-version 3.14 \
+  --only-binary=:all: \
+  --target lambda_build \
+  psycopg2-binary python-dotenv boto3
 cp lambda/lambda_function.py lambda_build/
 cp -r ETL lambda_build/
 cp -r databases lambda_build/
@@ -68,6 +74,19 @@ aws cloudformation deploy --stack-name ${team_name}-ETL-stack \
       LambdaSubnetIds="subnet-0b18baebb2612c8b0" \
       LambdaSecurityGroupIds="sg-0e23d4530f0fbf635";
     
+
+echo ""
+echo "Forcing Lambda to pick up latest code..."
+echo ""
+
+aws lambda update-function-code \
+    --function-name roamingrhubarbs-etl-lambda \
+    --s3-bucket "${DEPLOYMENT_BUCKET}" \
+    --s3-key lambda.zip \
+    --region ${region} \
+    --profile ${aws_profile} \
+    --publish;
+echo "Lambda code updated"
 
 
 echo ""

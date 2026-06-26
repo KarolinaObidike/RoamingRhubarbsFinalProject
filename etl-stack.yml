@@ -9,10 +9,10 @@ Parameters:
 
   RedshiftSsmParameterName:
     Type: String
-    
+
   LambdaSubnetIds:
       Type: List<AWS::EC2::Subnet::Id>
-  
+
   LambdaSecurityGroupIds:
       Type: List<AWS::EC2::SecurityGroup::Id>
 
@@ -31,7 +31,7 @@ Resources:
         RestrictPublicBuckets: True
       NotificationConfiguration:
         LambdaConfigurations:
-          - Event: s3:ObjectCreated:*
+          - Event: "s3:ObjectCreated:*"
             Function: !GetAtt ETLLambda.Arn
 
   CsvBucketPolicy:
@@ -56,8 +56,10 @@ Resources:
     Type: AWS::Lambda::Function
     Properties:
       FunctionName: roamingrhubarbs-etl-lambda
-      Runtime: python3.12
+      Runtime: python3.14
       Handler: lambda_function.lambda_handler
+      Timeout: 60
+      MemorySize: 256
       Role: !Sub 'arn:aws:iam::660759886369:role/lambda-execution-role'
       Code:
         S3Bucket: !Ref DeploymentBucketName
@@ -75,10 +77,13 @@ Resources:
       FunctionName: !Ref ETLLambda
       Action: lambda:InvokeFunction
       Principal: s3.amazonaws.com
-      SourceArn: !GetAtt CsvBucket.Arn
+      SourceAccount: !Ref AWS::AccountId
 
 
 Outputs:
 
   LambdaName:
     Value: !Ref ETLLambda
+
+
+  

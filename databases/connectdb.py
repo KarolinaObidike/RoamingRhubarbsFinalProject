@@ -44,7 +44,7 @@ def get_redshift_connection(parameter_name):
 
     connection = psycopg2.connect(
         host=config["host"],
-        dbname=config["dbname"],
+        dbname=config["database-name"],
         user=config["user"],
         password=config["password"],
         port=config.get("port", 5439)  # Default Redshift port is 5439

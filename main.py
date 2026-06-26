@@ -1,6 +1,6 @@
 # THIS CODE WILL RUN THE FULL ETL PIPELINE
 from databases import connectdb
-from ETL import Extract, Transform
+from ETL import Extract, transform
 from ETL.load import load_all
 import time
 
@@ -19,7 +19,7 @@ def wait_for_db():
 
 def main():
     rawdata = Extract.get_data()
-    transformed_data = Transform.etl_transform(rawdata)
+    transformed_data = transform.etl_transform(rawdata)
 
     with connectdb.get_connection() as conn:
         load_counts = load_all(transformed_data, conn)

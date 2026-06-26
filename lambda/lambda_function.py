@@ -1,12 +1,14 @@
 import logging
 import os
+import sys
+sys.path.append(os.path.join(os.path.dirname(__file__), ".."))
 import urllib.parse
 import boto3
-from ETL.Transform import Transform
+
+from ETL.transform import etl_transform
 from ETL.Extract import extract_data_from_string
 from databases import connectdb
 from ETL.load import load_all
-
 
 # Initialize logging and S3 client outside the handler for warm start benefits
 logger = logging.getLogger()
@@ -34,8 +36,7 @@ def lambda_handler(event, context):
         logger.info(f"Extracted {len(raw_data)} data rows from {object_key}")
 
         # 4. Transform data using your shared pipeline module
-        transform = Transform()
-        transformed_data = Transform.transform(raw_data)
+        transformed_data = etl_transform(raw_data)
 
         logger.info(
             f"Transform successful — "
@@ -43,7 +44,9 @@ def lambda_handler(event, context):
             f"Transactions: {len(transformed_data['transactions'])}"
         )
 
-        ssm_parameter_name = os.environ.get["REDSHIFT_SSM_PARAMETER_NAME"]
+        ssm_parameter_name = os.environ.get("REDSHIFT_SSM_PARAMETER_NAME")
+        if not ssm_parameter_name:
+            raise ValueError("Missing environment variable: REDSHIFT_SSM_PARAMETER_NAME")
         with connectdb.get_redshift_connection(ssm_parameter_name) as conn:
             load_counts = load_all(transformed_data, conn)
 
