@@ -26,5 +26,15 @@ Research docker more and YAML
 
  Week 2 Retro:
  <.>
+ Scrummaster: Kaleb
+
+ What went well?
+ All tickets eventually complete and better understanding of AWS for all members
+
+ What did not go so well?
+ Ticket took longer than expected to complete running over in to the next designated sprint a bit
+
+ What actions will we take in the next sprint?
+ Research more into AWS and Redshift especially for next weeks tickets which may need it with Grafana
 
  ....
